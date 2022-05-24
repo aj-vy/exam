@@ -1,0 +1,434 @@
+sql connector
+
+import mysql.connector
+from mysql.connector import Error
+conn=mysql.connector.connect(host="localhost",
+                             user="root",
+                             password="",
+                             database="")
+print(conn)
+
+mycur=conn.cursor()
+print(mycur)
+
+query="create database DSBD"
+mycur.execute(query)
+print("Data base created ")
+
+mycur.execute("show databaseS")
+for i in mycur:
+    print(i)
+
+conn.close()
+
+conn=mysql.connector.connect(host="localhost",user="root",password="",database="DSBD")  //creating table
+mycur=conn.cursor()
+
+query="create table student(Roll_no int primary key,Name varchar(100))"
+mycur.execute(query)
+print("Table Created")
+
+mycur.execute("show tables")
+for i in mycur:print(i)
+
+query="alter table student add column Address varchar(100)"
+mycur.execute(query)
+print("Table Altered")
+
+query="insert into student values(76,'Ajay','Hadapsar')"
+mycur.execute(query)
+print("Record inserted")
+
+query="select * from student"
+mycur.execute(query)
+for i in mycur:
+    print(i)
+
+query="update student set address='Aurangabad' where roll_no=72"
+mycur.execute(query)
+print("Record Updated")
+
+query="delete from student where roll_no=96"
+mycur.execute(query)
+print("Record Deleted")
+
+query="select * from student"
+mycur.execute(query)
+for i in mycur:
+    print(i)
+
+
+
+
+
+WEB SCRAPPING
+
+
+
+
+
+from bs4 import BeautifulSoup
+import requests
+
+url= "https://en.wikipedia.org/wiki/Sunday_Times_Fast_Track_100"
+page = requests.get(url).content
+soup = BeautifulSoup(page, 'html.parser')
+print(soup)
+
+print(soup.prettify)
+
+table = soup.find_all("table")[0]
+print(table)
+print(soup.find["tr"]['class'])
+
+soup=BeautifulSoup(str(table),"html.parser")
+print(soup.prettify)
+
+
+
+
+NUMPY
+
+
+
+import numpy as np
+
+a=np.array([1,2,3,4,5,6])
+print(a)
+print(type(a))
+print("The shape of this array is : ",a.shape)
+print(a.ndim,"Dimension array")
+
+a = np.array([
+    [0, 1, 2],
+    [3, 4, 5]
+    ])
+
+a = np.array([
+    [[0, 1, 2],[10,20,30]],
+    [[3, 4, 5],[300,40,50]],
+    ])
+
+a=np.array([1,2,3,4,5,6])
+print(a[2:5])
+
+a = np.array([
+    [0, 1, 2],
+    [3, 4, 5]
+    ])
+print(a[1][1:])
+
+# For 3-D array
+a = np.array([
+    [[0, 1, 2],[10,20,30]],
+    [[3, 4, 5],[300,40,50]],
+    ])
+print(a[1][1][0])
+print(a[:,1,1:])
+
+a = np.array([        //boolean indexing
+    [0, 1, 2],
+    [3, 4, 5]
+    ])
+ind=a>=3
+print(ind)
+print(a[ind])
+
+a = np.array([1, 2, 3.2, 4.3])
+print(a.dtype)
+print(a)
+
+a = np.array([1, 2, 3.2, 4.3], dtype=np.int64)
+print(a.dtype)
+print(a)
+
+x = np.array([[1,2],[3,4]], dtype=np.float32) 
+y = np.array([[5,6],[7,8]], dtype=np.float32)
+print("Addition\n",np.add(x,y))
+print("Subtraction\n",np.subtract(x,y))
+print("Multiplication\n",np.multiply(x,y))
+print("Multiply by 2 \n",x*2)
+
+a=np.array(np.arange(1,20,2))  # start,end,step
+print(a)
+
+a=np.array(np.random.randint(1,10,5))
+print(a)
+
+a=np.zeros((4,2))
+print(a)
+
+a=np.ones((2,4),dtype="byte")
+print(a)
+
+a=np.arange(1,9)
+print(a)
+a.shape=(2,4) # reshaping array
+print(a)
+print(a.reshape(4,2))
+
+x = np.array([[1,2],[3,4]], dtype=np.float32)    //Flatting the array
+print("Before flattning array \n",x)
+print("After flattning array \n",x.flatten())
+
+a = np.arange(9)                                                      //where clause
+print("The original array\n",a)
+div_3 = np.where(a%3==0)
+even = np.extract(a%2==0, a)
+print("The array which is divisible by 3 \n",div_3)
+print("The array of even numbers \n",even)
+
+
+
+PANDAS
+
+
+
+import pandas as pd
+import requests
+
+# Pandas Series Function
+df=pd.Series([1,2,3,4,5],["A","B","C","D","E"])
+print(df)
+
+df=pd.Series([[1,2],[3,4]],["A","B"])
+df
+
+# Creating DataFrame
+df=pd.DataFrame({'Name':["Ajay","Vyanjane","AJ","VY"],'Marks':[92,86,88,90]},index=["Name1","Name2","Name3","Name4"])
+df
+
+print(df[1:3])
+
+print(df.loc[["Name2","Name3"]])
+
+print(df.loc["Name2":])
+
+print(df.iloc[2:,0])
+
+df = pd.read_csv("stroke_data.csv")                         //reading csv
+print("The sphape of DataFrame is : ",df.shape)
+print(df.head().T)
+
+df.describe()
+
+df.info()
+
+df.isnull().sum()
+
+df['bmi'] = df['bmi'].fillna(df['bmi'].mean())     //handeling missing data
+
+df.isnull().sum()
+
+df['age'] = df['age'].astype(int)                           //converting datatypes
+
+dfdum=pd.get_dummies(df['gender'])
+
+dfnew=df.merge(dfdum,on=df['id'])
+
+dfnew.drop(columns=['gender','Other'],inplace=True)
+
+dfnew.sample(5)
+
+a=dfnew.groupby('work_type')                         //Group by function
+a.sum()
+
+df=pd.read_excel('stroke_data_excel.xlsx')
+df.head()
+
+data = pd.read_json('https://api.github.com/users')
+data.head().T
+
+url='https://archive.nptel.ac.in/course.html'
+re=requests.get(url)
+
+readHtml=pd.read_html(re.text)
+df=pd.DataFrame(readHtml[0])
+df.head()
+
+df['URL'].value_counts()
+
+
+
+
+GRAPHS
+
+
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import numpy as np
+
+l1=np.random.randint(1,20,10)
+l2=np.random.randint(1,20,10)
+plt.plot(l1,l2)
+plt.xlabel("X-axis")
+plt.ylabel("Y-axis")
+
+l1=[1,2,3,4,5,6]
+l2=[i*2 for i in l1]
+plt.scatter(l1,l2,marker='*',c='red')
+
+l1=[1,2,3,4,5,6]
+l2=[10,2,4,6,12,8]
+plt.plot(l1,l2,color='green', marker='X', linestyle='dashed',linewidth=2, markersize=12)
+
+#Red dashes, blue squares and green triangles
+t = np.arange(0., 5., 0.2)
+plt.plot(t, t, 'r--', t, t**2, 'bs', t, t**3, 'g^')
+plt.show()
+
+x = np.arange(0, 3 * np.pi, 0.1)                //SIN WAVE
+y = np.sin(x) 
+plt.title("sine wave form") 
+# Plot the points using matplotlib 
+plt.plot(x, y) 
+plt.show()
+
+df=pd.read_csv('heart.csv')                          //Reading Dataset and Plotting Graphs
+df.head(3)
+
+plt.figure(figsize=(14,6))
+df['Sex'].value_counts().plot(kind='bar',color=['green','red'])
+plt.xlabel("M-Male // F-Female")
+plt.ylabel("Counts")
+
+df['ChestPainType'].value_counts()
+
+plt.figure(figsize=(14,6))
+plt.pie(df['ChestPainType'].value_counts(),labels=['ASY','NAP','ATA','TA'],autopct='%.2f')
+plt.title("Pie Chart")
+plt.show()
+
+names = ['GroupA', 'GroupB', 'GroupC']
+values = [1, 10, 100]
+plt.figure(figsize=(10,4))
+plt.subplot(131)
+plt.bar(names, values)
+plt.subplot(132)
+plt.scatter(names,values)
+plt.subplot(133)
+plt.plot(names, values)
+plt.suptitle('Categorical Plotting')
+plt.show()
+
+x = np.arange(0, 3* np.pi, 0.1)
+y_sin = np.sin(x)
+y_cos = np.cos(x)
+plt.subplot(1, 2, 1)
+plt.plot(x, y_sin)
+plt.title('Sine Wave')
+plt.subplot(1, 2, 2)
+plt.plot(x, y_cos)
+plt.title('Cosine Wave')
+plt.suptitle('Waveforms')
+plt.show()
+
+
+
+Data Preprocessing/Wrangling: 
+
+
+
+
+import pandas as pd 
+import numpy as np
+
+# creating a dataframe 
+df = pd.DataFrame({'A': ['John', 'Boby', 'Mina', 'Peter', 'Nicky'], 
+ 'B': ['Masters', 'Graduate', 'Graduate', 'Masters', 'Graduate'], 
+ 'C': [27, 23, 21, 23, 24]})
+
+print(df)
+
+table = pd.pivot_table(df, index =['A', 'B'])             //CREATING PIVOT ELEMENTS
+table
+
+# Creates a pivot table dataframe 
+table = pd.pivot_table(df, values ='A', index =['B', 'C'],columns =['B'], aggfunc = np.sum) 
+table
+
+df = pd.DataFrame({'Name': {0: 'John', 1: 'Bob', 2: 'Shiela'},         //PANDAS MELT FUNCTION
+ 'Course': {0: 'Masters', 1: 'Graduate', 2: 'Graduate'}, 
+ 'Age': {0: 27, 1: 23, 2: 21}}) 
+df 
+
+# Name is id_vars and Course is value_vars 
+pd.melt(df, id_vars =['Name'], value_vars =['Course'])
+
+# multiple unpivot columns 
+pd.melt(df, id_vars =['Name'], value_vars =['Course', 'Age'])
+
+# Names of ‗variable‘ and ‗value‘ columns can be customized 
+pd.melt(df, id_vars =['Name'], value_vars =['Course'], 
+var_name ='ChangedVarname', value_name ='ChangedValname') 
+
+data=pd.read_excel("salary.xlsx")                                                               //SORTING DATAFRAME
+data.head()
+
+data.drop(labels=0,axis=0,inplace=True)
+data.head()
+
+data=data.rename(columns={"Employee List":"LastName","Unnamed: 1":"FirstName","Unnamed: 2":"Status","Unnamed: 3":"Salary"})
+
+data.drop(labels=1,axis=0,inplace=True)
+data.head()
+
+data=data.reset_index()
+
+data=data.drop(columns=["index"])
+data.head()
+
+data.sort_values(["LastName","Salary"]).head(6)
+
+data.sort_values(["LastName","Status","Salary"],ascending=[True,True,False])
+
+data["Rank"]=data["LastName"].rank(method="min")                    //RANKING DATA
+data.head()
+
+data[data["LastName"]=="Brown"].value_counts()
+
+gb = data.groupby(["Status"])                                                                 //GROUPBY METHOD
+print(gb.get_group("Part Time"))
+print(gb.boxplot())
+
+gb = data.groupby(["Status","Salary"])
+gb.first()
+
+
+
+
+Data Preprocessing/Wrangling: ETL Phase 1 and Phase 2
+
+
+
+
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+
+df=pd.read_csv("diabetes.csv")
+df.head()
+
+x = df.drop(columns=["Outcome"])
+
+scaler= MinMaxScaler(feature_range=(0,4))
+new_x = scaler.fit_transform(x)
+new_x
+
+from sklearn.preprocessing import Binarizer                        //BINARIZE DATA
+
+binary= Binarizer()
+new_x = binary.fit_transform(x)
+new_x[0:6]
+# All values<=0 are converted to 0 anad greater than 0 are marked as 1
+
+from sklearn.preprocessing import StandardScaler                  //STANDARDIZE DATA
+from numpy import mean,std
+
+std= StandardScaler()
+new_x = std.fit_transform(x)
+new_x[0:6]
+
+print("The Standard Deviation is ",std(new_x[0:]))
+print("The Mean is ",mean(new_x[0]))
